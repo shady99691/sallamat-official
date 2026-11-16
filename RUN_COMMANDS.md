@@ -114,6 +114,23 @@ npx playwright test tests/specs/templates/createTemplate.video.spec.ts
 npx playwright test tests/specs/templates/createTemplate.file.spec.ts
 ```
 
+### 🛠️ Templates Manage (معاينة + تعديل + حذف)
+
+```bash
+# الفولدر كله (معاينة + تعديل + حذف)
+npx playwright test tests/specs/templates/manage
+
+# معاينة القالب + تعديل القالب ➜ إرسال للمراجعة
+npx playwright test tests/specs/templates/manage/01-preview-edit.spec.ts
+
+# حذف القالب (السلة الحمرا) + إلغاء الحذف
+npx playwright test tests/specs/templates/manage/02-delete.spec.ts
+
+# تيست واحد بالاسم
+npx playwright test tests/specs/templates/manage -g "edit template"
+npx playwright test tests/specs/templates/manage -g "delete button"
+```
+
 ---
 
 ## 📢 Ads

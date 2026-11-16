@@ -344,7 +344,10 @@ npx playwright install
 | `npm run test:filters` | البحث والفلاتر (اليدوية + التلقائية) |
 | `npm run test:filters:manual` | فلاتر الحملات اليدوية بس |
 | `npm run test:filters:auto` | فلاتر الحملات التلقائية بس |
-| `npm run test:templates` | كل أنواع القوالب |
+| `npm run test:templates` | كل أنواع القوالب (إنشاء + معاينة + تعديل + حذف) |
+| `npm run test:templates:manage` | معاينة + تعديل + حذف القوالب |
+| `npm run test:templates:edit` | معاينة القالب + تعديله ➜ إرسال للمراجعة |
+| `npm run test:templates:delete` | حذف القالب (السلة الحمرا) |
 | `npm run test:ads` | الإعلان (إنشاء + فلاتر) |
 | `npm run test:ads:filters` | فلاتر الإعلانات بس |
 | `npm run test:customers` | العملاء (رفع بالإكسل + فلاتر) |

@@ -38,7 +38,7 @@ export class TemplatePage extends BasePage {
         super(page);
 
         // القوالب في السيدبار
-        this.templatesLink = page.locator("//p[contains(text(),'القوالب')]");
+        this.templatesLink = page.getByRole('tab', { name: 'القوالب' });
 
         // زر إنشاء قالب جديد (النص داخله "text-sm font-semibold")
         this.createTemplateButton = page.locator("//span[@class='text-sm font-semibold']");
@@ -78,8 +78,12 @@ export class TemplatePage extends BasePage {
 
     /** التنقل لصفحة القوالب */
     async openTemplates() {
-        await expect(this.templatesLink).toBeVisible({ timeout: 15000 });
-        await this.templatesLink.click();
+        await expect(this.templatesLink).toBeVisible({ timeout: 45000 });
+        // الكليك ممكن يضيع لو حصل قبل ما الصفحة تتهيأ (hydration) ➜ نعيده لحد ما صفحة القوالب تظهر
+        await expect(async () => {
+            await this.templatesLink.click();
+            await expect(this.createTemplateButton).toBeVisible({ timeout: 8000 });
+        }).toPass({ timeout: 60000, intervals: [500, 1000, 2000] });
     }
 
     /** الضغط على إنشاء قالب جديد */
