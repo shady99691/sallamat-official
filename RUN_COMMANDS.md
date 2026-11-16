@@ -122,6 +122,25 @@ npx playwright test tests/specs/templates/createTemplate.file.spec.ts
 npx playwright test tests/specs/ads/createAd.spec.ts
 ```
 
+### 🔎 Ads Filters (فلاتر الإعلانات + البحث)
+
+```bash
+# الفولدر كله
+npx playwright test tests/specs/ads/filters
+
+# Search
+npx playwright test tests/specs/ads/filters/01-search.spec.ts
+
+# الكل
+npx playwright test tests/specs/ads/filters/02-all.spec.ts
+
+# مفعّلة
+npx playwright test tests/specs/ads/filters/03-active.spec.ts
+
+# غير مفعّلة
+npx playwright test tests/specs/ads/filters/04-inactive.spec.ts
+```
+
 ---
 
 ## 👥 Customers
@@ -218,3 +237,5 @@ $env:ARABIC_RAW="1"; npx playwright test tests/specs/customers/uploadCustomers.s
 ```bash
 npx playwright show-report
 ```
+//  asmaa_fadel@azzrk.com   هنا لو  هنشتغل  اتوميت كامبين 
+//123456789
