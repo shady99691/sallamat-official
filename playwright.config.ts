@@ -47,7 +47,7 @@ export default defineConfig({
   /* الريبورت بيتعمل بعد كل رن (نجاح أو فشل) ويفتح لوحده في playwright-report/index.html */
   reporter: [
     ['list'],
-    ['html', { outputFolder: 'playwright-report', open: 'always' }],
+    ['html', { outputFolder: 'playwright-report', open: process.env.CI ? 'never' : 'always' }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {

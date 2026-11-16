@@ -17,6 +17,17 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+    - name: Create test data from secrets
+      env:
+        VALID_EMAIL: ${{ secrets.TEST_VALID_EMAIL }}
+        VALID_PASSWORD: ${{ secrets.TEST_VALID_PASSWORD }}
+        INVALID_EMAIL: ${{ secrets.TEST_INVALID_EMAIL }}
+        INVALID_PASSWORD: ${{ secrets.TEST_INVALID_PASSWORD }}
+      run: |
+        node -e "require('fs').writeFileSync('tests/testdata/testdata.json', JSON.stringify({
+          validUser: { email: process.env.VALID_EMAIL, password: process.env.VALID_PASSWORD },
+          invalidUser: { email: process.env.INVALID_EMAIL, password: process.env.INVALID_PASSWORD }
+        }))"
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4

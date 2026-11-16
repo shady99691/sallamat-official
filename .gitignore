@@ -6,3 +6,6 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# بيانات الدخول (محلي بس – انسخ testdata.example.json)
+/tests/testdata/testdata.json

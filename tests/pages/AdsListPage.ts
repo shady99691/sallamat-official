@@ -39,7 +39,8 @@ export class AdsListPage extends BasePage {
     }
 
     tab(name: AdsTab): Locator {
-        return this.page.locator('button, [role="tab"]').filter({ hasText: TAB_PATTERN[name] }).first();
+        // مش شرط التاب يكون <button> أو role=tab (ممكن div/span/p) ➜ نبحث بالنص مباشرة
+        return this.page.getByText(TAB_PATTERN[name]).first();
     }
 
     switchOf(card: Locator): Locator {

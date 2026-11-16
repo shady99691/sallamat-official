@@ -73,9 +73,22 @@ sallamat-official/
 │   │   │   ├── createTemplate.video.spec.ts
 │   │   │   └── createTemplate.file.spec.ts
 │   │   ├── ads/
-│   │   │   └── createAd.spec.ts
+│   │   │   ├── createAd.spec.ts
+│   │   │   └── filters/                # البحث وتابات الإعلانات
+│   │   │       ├── 01-search.spec.ts
+│   │   │       ├── 02-all.spec.ts
+│   │   │       ├── 03-active.spec.ts
+│   │   │       └── 04-inactive.spec.ts
 │   │   └── customers/
-│   │       └── uploadCustomers.spec.ts
+│   │       ├── uploadCustomers.spec.ts
+│   │       └── filters/                # فلاتر العملاء
+│   │           ├── 01-search.spec.ts
+│   │           ├── 02-customer-type.spec.ts
+│   │           ├── 03-date-range.spec.ts
+│   │           ├── 04-campaign.spec.ts
+│   │           ├── 05-gender.spec.ts
+│   │           ├── 06-sorting.spec.ts
+│   │           └── 07-combined.spec.ts
 │   ├── pages/                      # Page Objects (اللوكيتورز والأكشنز لكل صفحة)
 │   │   ├── BasePage.ts
 │   │   ├── LoginPage.ts
@@ -88,14 +101,17 @@ sallamat-official/
 │   │   ├── AdPage.ts
 │   │   └── CustomersPage.ts
 │   ├── fixtures/                   # Playwright fixtures (تجهيز مشترك قبل التستات)
-│   │   └── campaignsList.fixture.ts
+│   │   ├── campaignsList.fixture.ts
+│   │   ├── adsList.fixture.ts
+│   │   └── customersList.fixture.ts
 │   ├── utils/                      # أدوات مساعدة
 │   │   ├── apiLogFormat.ts
 │   │   ├── apiLogger.ts
 │   │   ├── authResult.ts
 │   │   └── excelHelper.ts
 │   ├── testdata/
-│   │   └── testdata.json           # بيانات الدخول
+│   │   ├── testdata.json           # بيانات الدخول (محلي، مش في git)
+│   │   └── testdata.example.json   # نموذج للملف ده
 │   └── assets/                     # ملفات بتترفع أثناء التستات
 │       ├── ad-image.png
 │       ├── sample.png
@@ -178,11 +194,32 @@ sallamat-official/
 |---|---|
 | `createAd.spec.ts` | صندوق الإعلان ← إنشاء إعلان ← رفع صورة الإعلان (`assets/ad-image.png` – 800×600) في مربع "صورة الإعلان" ← الخطوة القادمة ×4 ← إطلاق الإعلان |
 
+#### `specs/ads/filters/` – البحث والتابات في صفحة الإعلانات
+
+| الملف | بيعمل إيه |
+|---|---|
+| `01-search.spec.ts` | البحث بعنوان إعلان موجود (يظهر المطابق بس) وبعنوان غير موجود (مفيش نتايج) |
+| `02-all.spec.ts` | تاب "الكل" يعرض المفعّلة وغير المفعّلة، والرجوع له يرجّع القائمة كاملة |
+| `03-active.spec.ts` | تاب "مفعّلة" يعرض الإعلانات المفعّلة بس |
+| `04-inactive.spec.ts` | تاب "غير مفعّلة" يعرض الإعلانات غير المفعّلة بس |
+
 #### `specs/customers/` – العملاء
 
 | الملف | بيعمل إيه |
 |---|---|
 | `uploadCustomers.spec.ts` | العملاء ← رفع البيانات يدويًا ← "اضغط للتنزيل" (بينزّل ملف الإكسل) ← يملاه بـ 3 عملاء بأرقام سعودية صحيحة ← يرفعه ← تأكيد ← يتأكد إن أول عميل ظهر في الجدول |
+
+#### `specs/customers/filters/` – البحث والفلاتر في صفحة العملاء
+
+| الملف | بيعمل إيه |
+|---|---|
+| `01-search.spec.ts` | البحث بالاسم / رقم الهاتف، حفظ النص في الـ URL، بحث بدون نتايج، ومسح البحث |
+| `02-customer-type.spec.ts` | فلتر نوع العميل (الافتراضي "الكل" وكل الخيارات) |
+| `03-date-range.spec.ts` | فلتر تاريخ آخر تعديل (من أول الشهر لحد النهارده، ويوم واحد) |
+| `04-campaign.spec.ts` | فلتر الحملات (حملة واحدة وحملتين) |
+| `05-gender.spec.ts` | فلتر النوع (ذكر / أنثى) |
+| `06-sorting.spec.ts` | الترتيب الزمني (الأحدث للأقدم والعكس) بـ `updated_at` |
+| `07-combined.spec.ts` | فلاتر مجمّعة (بحث + نوع + نوع عميل) واسترجاعها من الـ URL بعد reload |
 
 ---
 
@@ -248,7 +285,8 @@ test('auto', async ({ autoList }) => {
 
 | الملف | بيعمل إيه |
 |---|---|
-| `testdata.json` | بيانات الدخول: `validUser` (حساب صحيح) و`invalidUser` (باسوورد غلط). كل التستات بتقرا منه، فلو الباسوورد اتغير بنعدّله هنا بس |
+| `testdata.json` | بيانات الدخول (محلي، مش في git): `validUser` (حساب صحيح) و`invalidUser` (باسوورد غلط). كل التستات بتقرا منه، فلو الباسوورد اتغير بنعدّله هنا بس |
+| `testdata.example.json` | نموذج للملف ده. انسخه باسم `testdata.json` واكتب بياناتك. في GitHub Actions بيتعمل من الـ secrets: `TEST_VALID_EMAIL` و`TEST_VALID_PASSWORD` و`TEST_INVALID_EMAIL` و`TEST_INVALID_PASSWORD` |
 
 ---
 
@@ -307,8 +345,10 @@ npx playwright install
 | `npm run test:filters:manual` | فلاتر الحملات اليدوية بس |
 | `npm run test:filters:auto` | فلاتر الحملات التلقائية بس |
 | `npm run test:templates` | كل أنواع القوالب |
-| `npm run test:ads` | الإعلان |
-| `npm run test:customers` | رفع العملاء بالإكسل |
+| `npm run test:ads` | الإعلان (إنشاء + فلاتر) |
+| `npm run test:ads:filters` | فلاتر الإعلانات بس |
+| `npm run test:customers` | العملاء (رفع بالإكسل + فلاتر) |
+| `npm run test:customers:filters` | فلاتر العملاء بس |
 | `npm run test:api` | تستات الـ API بس |
 | `npm run test:debug` | تشغيل مع الـ Inspector خطوة بخطوة |
 | `npm run report` | فتح آخر ريبورت |
