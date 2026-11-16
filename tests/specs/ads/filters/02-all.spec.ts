@@ -3,6 +3,9 @@ import { test, expect } from '../../../fixtures/adsList.fixture';
 // ============================================================
 //  الإعلانات – تاب "الكل"
 // ============================================================
+// التستات ورا بعض في worker واحد (براوزر واحد + login واحد) بدل 3 براوزرات بالتوازي
+test.describe.configure({ mode: 'default' });
+
 test.describe('Ads – Tab "الكل"', () => {
 
     test('"الكل" shows active and inactive ads together', async ({ adsList }) => {

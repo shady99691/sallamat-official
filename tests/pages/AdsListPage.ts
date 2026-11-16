@@ -51,8 +51,11 @@ export class AdsListPage extends BasePage {
     /** (بعد اللوجين) يضغط على تاب "صندوق الإعلان" في السيدبار ويستنى الكروت */
     async openFromSidebar() {
         await expect(this.adBoxLink).toBeVisible({ timeout: 45000 });
-        await this.adBoxLink.click();
-        await expect(this.searchInput).toBeVisible({ timeout: 45000 });
+        // الكليك ممكن يضيع لو حصل قبل ما الصفحة تتهيأ (hydration) ➜ نعيده لحد ما صفحة الإعلانات تظهر
+        await expect(async () => {
+            await this.adBoxLink.click();
+            await expect(this.searchInput).toBeVisible({ timeout: 8000 });
+        }).toPass({ timeout: 60000, intervals: [500, 1000, 2000] });
         await expect(this.cards.first()).toBeVisible({ timeout: 45000 });
         await this.page.waitForLoadState('networkidle').catch(() => {});
     }

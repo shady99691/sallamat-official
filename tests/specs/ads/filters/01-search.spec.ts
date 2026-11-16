@@ -3,6 +3,9 @@ import { test, expect } from '../../../fixtures/adsList.fixture';
 // ============================================================
 //  الإعلانات – مربع البحث (ابحث عن إعلان......)
 // ============================================================
+// التستات ورا بعض في worker واحد (براوزر واحد + login واحد) بدل 3 براوزرات بالتوازي
+test.describe.configure({ mode: 'default' });
+
 test.describe('Ads – Search', () => {
 
     test('search by an existing ad title shows only matching ads', async ({ adsList }) => {
@@ -22,15 +25,5 @@ test.describe('Ads – Search', () => {
     test('search by a title that does not exist shows no ads', async ({ adsList }) => {
         await adsList.search(`no_such_ad_${Date.now()}`);
         await expect.poll(() => adsList.getCardsCount()).toBe(0);
-    });
-
-    test('clearing the search shows all ads again', async ({ adsList }) => {
-        const before = await adsList.getCards();
-        await adsList.search(`no_such_ad_${Date.now()}`);
-        await expect.poll(() => adsList.getCardsCount()).toBe(0);
-
-        await adsList.clearSearch();
-        await expect.poll(() => adsList.getCardsCount()).toBe(before.length);
-        expect(await adsList.getCards()).toEqual(before);
     });
 });

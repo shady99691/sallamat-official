@@ -3,6 +3,9 @@ import { test, expect } from '../../../fixtures/adsList.fixture';
 // ============================================================
 //  الإعلانات – تاب "مفعّلة" (السويتش ON)
 // ============================================================
+// التستات ورا بعض في worker واحد (براوزر واحد + login واحد) بدل 3 براوزرات بالتوازي
+test.describe.configure({ mode: 'default' });
+
 test.describe('Ads – Tab "مفعّلة"', () => {
 
     test('"مفعّلة" shows only active ads', async ({ adsList }) => {
