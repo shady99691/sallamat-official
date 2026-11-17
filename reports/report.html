@@ -1,0 +1,81 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>تقرير أتمتة اختبار سلامات</title>
+<style>
+@page{size:A4;margin:18mm 16mm}
+body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;color:#1c2430;line-height:1.8;font-size:13px}
+h1{font-size:26px;margin:0 0 4px;color:#0b3d6b}
+.sub{color:#5b6675;margin-bottom:18px}
+h2{font-size:17px;color:#0b3d6b;border-right:5px solid #1a73e8;padding-right:10px;margin:24px 0 8px}
+table{width:100%;border-collapse:collapse;margin:8px 0 12px}
+th{background:#0b3d6b;color:#fff;padding:7px 9px;text-align:right}
+td{border:1px solid #d5dbe3;padding:6px 9px}
+tr:nth-child(even) td{background:#f4f7fb}
+.kpis{display:flex;gap:10px;margin:10px 0}
+.k{flex:1;background:#eef4fd;border-radius:8px;padding:10px;text-align:center}
+.k b{display:block;font-size:24px;color:#1a73e8}
+ul{margin:4px 0;padding-right:20px}
+.box{background:#fff8e6;border:1px solid #f0d58a;border-radius:8px;padding:10px 14px}
+.good{color:#0a7a3d}.bad{color:#b3261e}
+</style></head><body>
+<h1>تقرير أتمتة اختبار منصة سلامات</h1>
+<div class="sub">Playwright + TypeScript · البيئة التجريبية demo.sallamaat.com · 17 نوفمبر 2026</div>
+
+<h2>1. ملخص تنفيذي</h2>
+<p>تم بناء إطار أتمتة اختبارات متكامل لمنصة سلامات يغطي واجهة المستخدم (E2E) والـ API، ويعمل محليًا وعلى GitHub Actions. يتناول التقرير حالة المشروع الحالية، ثم يقيّم أداة <b>e2e</b> كإضافة محتملة لتقليل تكلفة صيانة الاختبارات.</p>
+<div class="kpis">
+<div class="k"><b>75</b>حالة اختبار</div><div class="k"><b>36</b>ملف Spec</div><div class="k"><b>13</b>Page Object</div><div class="k"><b>5</b>وحدات رئيسية</div></div>
+
+<h2>2. ما تم إنجازه</h2>
+<table><tr><th>الوحدة</th><th>عدد الاختبارات</th><th>التغطية</th></tr>
+<tr><td>تسجيل الدخول (Auth)</td><td>10</td><td>UI + API: دخول صحيح، كلمة مرور خاطئة، حقول فارغة</td></tr>
+<tr><td>الحملات (يدوية وتلقائية)</td><td>29</td><td>إنشاء الحملات + فلاتر البحث والحالة والقالب والمجموعة والتاريخ والترتيب</td></tr>
+<tr><td>القوالب</td><td>8</td><td>إنشاء (نص / صورة / فيديو / PDF) + معاينة وتعديل وحذف</td></tr>
+<tr><td>صندوق الإعلان</td><td>7</td><td>إنشاء إعلان ورفع الصورة + فلاتر البحث</td></tr>
+<tr><td>العملاء</td><td>21</td><td>رفع ملف Excel وتأكيد الرفع + فلاتر البحث</td></tr>
+<tr><td><b>الإجمالي</b></td><td><b>75</b></td><td></td></tr></table>
+
+<h2>3. بنية الإطار</h2>
+<ul>
+<li><b>نمط Page Object Model:</b> فصل منطق الصفحات عن الاختبارات لسهولة الصيانة.</li>
+<li><b>Fixtures</b> مشتركة وجلسة دخول مشتركة بين الـ workers لمنع فتح متصفحات متعددة.</li>
+<li><b>أدوات مساعدة:</b> التعامل مع Excel، تسجيل استدعاءات الـ API، ودعم العربية في الـ terminal.</li>
+<li><b>أدلة عند الفشل:</b> لقطة شاشة + فيديو + Trace، وتقرير HTML تلقائي.</li>
+<li><b>CI:</b> تشغيل تلقائي على GitHub Actions مع إعادة المحاولة مرتين، وبيانات الاعتماد خارج الـ git.</li>
+</ul>
+
+<h2>4. أداة e2e: ما هي؟</h2>
+<p>إطار اختبار حديث (e2e-inc/e2e على GitHub، رخصة Apache-2.0) للويب والموبايل. تصف الهدف بلغة طبيعية ويقوم وكيل ذكاء اصطناعي بتنفيذه على التطبيق، ويمكن إضافة locators وassertions للتحقق من النتيجة. الخطوات التي يتبعها assertion تُسجَّل وتُعاد من دون استدعاء الموديل حتى يتغير التطبيق. محرك الويب مبني على Playwright. التثبيت: <code dir="ltr">npx e2e init</code>.</p>
+
+<table><tr><th>المعيار</th><th>Playwright الحالي</th><th>e2e</th></tr>
+<tr><td>كتابة الاختبار</td><td>كود + Page Objects</td><td>هدف بلغة طبيعية + assertions</td></tr>
+<tr><td>مقاومة تغيّر الواجهة</td><td>تنكسر الـ locators ويلزم تعديل يدوي</td><td>الوكيل يعيد إيجاد المسار</td></tr>
+<tr><td>تكلفة التشغيل</td><td>مجانية</td><td>tokens عند التسجيل الأول، ثم شبه مجانية</td></tr>
+<tr><td>الحتمية</td><td>عالية</td><td>أقل أثناء خطوات الوكيل</td></tr>
+<tr><td>الموبايل</td><td>غير مغطى</td><td>iOS وAndroid</td></tr>
+<tr><td>النضج في مشروعنا</td><td class="good">مطبّق ومستقر</td><td class="bad">غير مجرَّب</td></tr></table>
+
+<h2>5. الفوائد المتوقعة</h2>
+<ul>
+<li>تقليل وقت صيانة الاختبارات عند تغيّر الواجهة (الفلاتر، خطوات إنشاء الحملات).</li>
+<li>كتابة أسرع للسيناريوهات الطويلة الجديدة.</li>
+<li>تشغيل متكرر في CI بتكلفة موديل منخفضة بعد التسجيل.</li>
+<li>إمكانية تغطية تطبيق الموبايل بنفس الأداة.</li>
+</ul>
+
+<h2>6. المخاطر والقيود</h2>
+<div class="box"><ul>
+<li>أداة جديدة تحتاج تعلّمًا وصيانة بجانب Playwright.</li>
+<li>الوكيل قد يتخذ مسارًا ينجح فيه الاختبار وهو غير المقصود، لذا نحتاج assertions قوية.</li>
+<li>تكلفة tokens عند التسجيل الأول، ومتطلب موديل (اشتراك أو API key).</li>
+<li>التوثيق الذي اطلعنا عليه لا يوضح إمكانية دمجها مع مشروع Playwright قائم، وهذا يحتاج تجربة فعلية.</li>
+</ul></div>
+
+<h2>7. التوصية والخطوات التالية</h2>
+<p>الإطار الحالي مستقر ومغطٍّ للوحدات الرئيسية، فلا حاجة لاستبداله. نوصي بإجراء <b>تجربة محدودة (PoC)</b> لأداة e2e في فرع منفصل:</p>
+<ol>
+<li>اختيار سيناريوهين: تسجيل الدخول، وفلتر العملاء.</li>
+<li>تنفيذهما بـ e2e ومقارنتهما بالحاليين في الاستقرار ووقت الكتابة وتكلفة الـ tokens.</li>
+<li>قياس الأداء عند تغيير الواجهة عمدًا.</li>
+<li>رفع القرار النهائي (اعتماد / اعتماد جزئي / عدم اعتماد) بعد النتائج.</li>
+</ol>
+<p style="color:#5b6675;font-size:11px;margin-top:20px">المصدر: ملف README لمستودع e2e على GitHub. أرقام المشروع محسوبة من الكود الحالي (عدد دوال test).</p>
+</body></html>
