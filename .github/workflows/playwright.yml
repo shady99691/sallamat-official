@@ -13,6 +13,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    # بيوقف الرن من الأول لو أي secret ناقص أو فاضي (بدل ما التيستات تقع بـ 401 مش مفهوم)
+    - name: Check test secrets
+      env:
+        TEST_VALID_EMAIL: ${{ secrets.TEST_VALID_EMAIL }}
+        TEST_VALID_PASSWORD: ${{ secrets.TEST_VALID_PASSWORD }}
+        TEST_INVALID_EMAIL: ${{ secrets.TEST_INVALID_EMAIL }}
+        TEST_INVALID_PASSWORD: ${{ secrets.TEST_INVALID_PASSWORD }}
+      run: |
+        missing=0
+        for name in TEST_VALID_EMAIL TEST_VALID_PASSWORD TEST_INVALID_EMAIL TEST_INVALID_PASSWORD; do
+          if [ -z "$(printenv "$name" | tr -d '[:space:]')" ]; then
+            echo "::error title=Missing secret::Secret '$name' is missing or empty. Add it in Settings > Secrets and variables > Actions > Repository secrets."
+            missing=1
+          fi
+        done
+        exit $missing
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
