@@ -1,9 +1,12 @@
 name: Playwright Tests
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+  # تشغيل يدوي بس: GitHub ← Actions ← Playwright Tests ← Run workflow
+  workflow_dispatch:
+    inputs:
+      tests:
+        description: 'مسار تيستات معين (اختياري) مثال: tests/specs/customers — سيبه فاضي لتشغيل الكل'
+        required: false
+        default: ''
 jobs:
   test:
     timeout-minutes: 60
@@ -29,7 +32,9 @@ jobs:
           invalidUser: { email: process.env.INVALID_EMAIL, password: process.env.INVALID_PASSWORD }
         }))"
     - name: Run Playwright tests
-      run: npx playwright test
+      env:
+        TESTS_PATH: ${{ inputs.tests }}
+      run: npx playwright test $TESTS_PATH
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
