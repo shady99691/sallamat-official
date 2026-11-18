@@ -95,7 +95,20 @@ export class AutoCampaignPage extends BasePage {
         }
 
         const title = this.templateTitle(name);
-        await expect(title, `Template "${name}" was not found`).toBeVisible({ timeout: 20000 });
+        try {
+            await expect(title).toBeVisible({ timeout: 20000 });
+        } catch {
+            // نطبع القوالب الظاهرة فعلًا عشان نعرف هل القالب مش موجود ولا الخطوة نفسها غلط
+            const visible = (await this.page.locator('h3').allInnerTexts().catch(() => []))
+                .map((t) => t.trim())
+                .filter(Boolean);
+            throw new Error(
+                `Template "${name}" was not found in the auto-campaign templates step.\n` +
+                `URL: ${this.page.url()}\n` +
+                `Search box present: ${await searchInput.isVisible().catch(() => false)}\n` +
+                `Visible h3 titles (${visible.length}): ${visible.slice(0, 30).join(' | ') || '<none>'}`
+            );
+        }
         await title.scrollIntoViewIfNeeded();
         await title.click();
 

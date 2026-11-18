@@ -39,12 +39,18 @@ export abstract class BasePage {
             const closeBtn = dialog
                 .getByRole('button', { name: /إغلاق|اغلاق|close|تخطي|فهمت|حسنا|حسنًا|تم/i })
                 .first();
-            if (await closeBtn.isVisible().catch(() => false)) {
-                await closeBtn.click();
-            } else {
-                await this.page.keyboard.press('Escape');
+            // البوب أب بيعمل re-render (animation) فالزرار بيتشال من الـ DOM أثناء الضغط
+            // ➜ click عادي بيفضل يعيد لحد ما التيست يخلص. فبنستخدم dispatchEvent بـ timeout قصير،
+            // ولو فشل ➜ Escape، وبعدين نستنى البوب أب يختفي.
+            const closed = await closeBtn
+                .dispatchEvent('click', undefined, { timeout: 3000 })
+                .then(() => dialog.waitFor({ state: 'hidden', timeout: 3000 }))
+                .then(() => true, () => false);
+            if (!closed) {
+                await this.page.keyboard.press('Escape').catch(() => {});
+                await dialog.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
             }
-        });
+        }).catch(() => {});
     }
 
     // ============= API Logging =============

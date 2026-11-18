@@ -14,7 +14,7 @@ import { CustomersListPage } from '../pages/CustomersListPage';
 export const test = base.extend<{ customersList: CustomersListPage }>({
 
     customersList: async ({ page }, use) => {
-        base.setTimeout(0);
+        base.setTimeout(process.env.CI ? 180_000 : 0);
         const listPage = new CustomersListPage(page);
         await listPage.open();
         // اللوجينج بيبدأ بعد فتح الصفحة ➜ بيتطبع بس نتيجة الأكشن (فلتر / بحث / ترتيب)

@@ -37,6 +37,6 @@ test.describe('Create Template – Image Attachment', () => {
         await templatePage.submitTemplate();
 
         // البراوزر يفضل مفتوح حتى تضغط Resume
-        await page.pause();
+        if (!process.env.CI && process.env.NO_PAUSE !== '1') await page.pause();
     });
 });

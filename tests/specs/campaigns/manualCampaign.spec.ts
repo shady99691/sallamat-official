@@ -49,6 +49,6 @@ test.describe('Manual Campaign Tests', () => {
 
         // التحقق: اسم الحملة الجديدة يظهر في الصفحة
         await expect(page.getByText(campaignName).first()).toBeVisible({ timeout: 15000 });
-        await page.pause();
+        if (!process.env.CI && process.env.NO_PAUSE !== '1') await page.pause();
     });
 });

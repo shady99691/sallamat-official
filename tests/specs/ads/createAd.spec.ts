@@ -14,8 +14,8 @@ test.describe('Create Ad', () => {
     let adPage: AdPage;
 
     test.beforeEach(async ({ page }) => {
-        // بدون timeout عشان البراوزر يفضل مفتوح بعد الرن
-        test.setTimeout(0);
+        // بدون timeout على الجهاز عشان البراوزر يفضل مفتوح بعد الرن – في الـ CI: 3 دقايق
+        test.setTimeout(process.env.CI ? 180_000 : 0);
 
         loginPage = new LoginPage(page);
         adPage = new AdPage(page);
@@ -31,7 +31,7 @@ test.describe('Create Ad', () => {
 
     // البراوزر يفضل مفتوح بعد الرن (نجح أو فشل) لحد ما تضغط Resume في الـ Inspector
     test.afterEach(async ({ page }) => {
-        await page.pause();
+        if (!process.env.CI && process.env.NO_PAUSE !== '1') await page.pause();
     });
 
     test('Create ad successfully', async () => {
