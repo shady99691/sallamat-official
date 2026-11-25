@@ -24,6 +24,7 @@
 6. [تشغيل التستات](#تشغيل-التستات)
 7. [إزاي التستات بتشتغل](#إزاي-التستات-بتشتغل)
 8. [إزاي تضيف تيست جديد](#إزاي-تضيف-تيست-جديد)
+9. [التقارير (reports/)](#التقارير-reports)
 
 ## المشروع بيختبر إيه؟
 
@@ -34,9 +35,11 @@
 | **فلاتر الحملات اليدوية** | مربع البحث + كل فلتر لوحده: الحالة، القالب، حالة القالب، المجموعة، نطاق التاريخ، الترتيب الزمني |
 | **فلاتر الحملات التلقائية** | مربع البحث + كل فلتر لوحده: الحالة، الحدث، حالة القالب، نطاق التاريخ، الترتيب الزمني |
 | **الحملات التلقائية** | إنشاء حملة تلقائية (اسم ← وصف ← حدث ← قالب ← تفعيل) |
-| **القوالب** | إنشاء قالب بنص فقط / صورة / فيديو / ملف PDF |
-| **صندوق الإعلان** | إنشاء إعلان مع رفع صورة الإعلان ← الخطوات ← إطلاق الإعلان |
-| **العملاء** | تنزيل ملف الإكسل، ملؤه ببيانات عملاء، رفعه وتأكيد الرفع |
+| **القوالب** | إنشاء قالب بنص فقط / صورة / فيديو / ملف PDF + معاينة القالب وتعديله وإرساله للمراجعة + حذفه |
+| **صندوق الإعلان** | إنشاء إعلان مع رفع صورة الإعلان ← الخطوات ← إطلاق الإعلان + البحث والتابات (الكل / مفعّلة / غير مفعّلة) |
+| **العملاء** | تنزيل ملف الإكسل، ملؤه ببيانات عملاء، رفعه وتأكيد الرفع + البحث وكل الفلاتر (نوع العميل، التاريخ، الحملات، النوع، الترتيب، فلاتر مجمّعة) |
+| **واتساب ودجت** | تعديل محتوى الرسائل، تخصيص المظهر (الموقع / الحجم / الإزاحة / اللون)، التفاعل (عند التمرير / عند الخمول)، إيقاف الودجت، رفع صورة الشعار، المعاينة اللايف + الـ validation (العنوان أقل من 5 حروف، الرقم فاضي) |
+| **الإعدادات – تغيير كلمة السر** | تغيير ناجح ورجوع للقديم + حقول فاضية، تأكيد مش مطابق، باسوورد حالي غلط، إلغاء |
 
 ## هيكل المشروع
 
@@ -71,7 +74,10 @@ sallamat-official/
 │   │   │   ├── createTemplate.text.spec.ts
 │   │   │   ├── createTemplate.image.spec.ts
 │   │   │   ├── createTemplate.video.spec.ts
-│   │   │   └── createTemplate.file.spec.ts
+│   │   │   ├── createTemplate.file.spec.ts
+│   │   │   └── manage/                 # معاينة + تعديل + حذف القوالب
+│   │   │       ├── 01-preview-edit.spec.ts
+│   │   │       └── 02-delete.spec.ts
 │   │   ├── ads/
 │   │   │   ├── createAd.spec.ts
 │   │   │   └── filters/                # البحث وتابات الإعلانات
@@ -79,16 +85,32 @@ sallamat-official/
 │   │   │       ├── 02-all.spec.ts
 │   │   │       ├── 03-active.spec.ts
 │   │   │       └── 04-inactive.spec.ts
-│   │   └── customers/
-│   │       ├── uploadCustomers.spec.ts
-│   │       └── filters/                # فلاتر العملاء
-│   │           ├── 01-search.spec.ts
-│   │           ├── 02-customer-type.spec.ts
-│   │           ├── 03-date-range.spec.ts
-│   │           ├── 04-campaign.spec.ts
-│   │           ├── 05-gender.spec.ts
-│   │           ├── 06-sorting.spec.ts
-│   │           └── 07-combined.spec.ts
+│   │   ├── customers/
+│   │   │   ├── uploadCustomers.spec.ts
+│   │   │   └── filters/                # فلاتر العملاء
+│   │   │       ├── 01-search.spec.ts
+│   │   │       ├── 02-customer-type.spec.ts
+│   │   │       ├── 03-date-range.spec.ts
+│   │   │       ├── 04-campaign.spec.ts
+│   │   │       ├── 05-gender.spec.ts
+│   │   │       ├── 06-sorting.spec.ts
+│   │   │       └── 07-combined.spec.ts
+│   │   ├── whatsapp-widget/            # واتساب ودجت – كل كيس في فايل
+│   │   │   ├── 01-update-content.spec.ts
+│   │   │   ├── 02-main-title-validation.spec.ts
+│   │   │   ├── 03-phone-validation.spec.ts
+│   │   │   ├── 04-appearance.spec.ts
+│   │   │   ├── 05-interaction.spec.ts
+│   │   │   ├── 06-deactivate.spec.ts
+│   │   │   ├── 07-live-preview.spec.ts
+│   │   │   └── 08-logo-upload.spec.ts
+│   │   └── settings/
+│   │       └── change-password/        # تغيير كلمة السر – كل كيس في فايل
+│   │           ├── 01-change-password.spec.ts
+│   │           ├── 02-empty-fields.spec.ts
+│   │           ├── 03-mismatch-confirmation.spec.ts
+│   │           ├── 04-wrong-current-password.spec.ts
+│   │           └── 05-cancel.spec.ts
 │   ├── pages/                      # Page Objects (اللوكيتورز والأكشنز لكل صفحة)
 │   │   ├── BasePage.ts
 │   │   ├── LoginPage.ts
@@ -98,15 +120,22 @@ sallamat-official/
 │   │   ├── AutoCampaignsListPage.ts
 │   │   ├── AutoCampaignPage.ts
 │   │   ├── TemplatePage.ts
+│   │   ├── TemplatesListPage.ts
 │   │   ├── AdPage.ts
-│   │   └── CustomersPage.ts
+│   │   ├── AdsListPage.ts
+│   │   ├── CustomersPage.ts
+│   │   ├── CustomersListPage.ts
+│   │   ├── WhatsAppWidgetPage.ts
+│   │   └── SettingsPage.ts
 │   ├── fixtures/                   # Playwright fixtures (تجهيز مشترك قبل التستات)
 │   │   ├── campaignsList.fixture.ts
 │   │   ├── adsList.fixture.ts
-│   │   └── customersList.fixture.ts
+│   │   ├── customersList.fixture.ts
+│   │   └── templatesList.fixture.ts
 │   ├── utils/                      # أدوات مساعدة
 │   │   ├── apiLogFormat.ts
 │   │   ├── apiLogger.ts
+│   │   ├── arabicTerminal.ts
 │   │   ├── authResult.ts
 │   │   └── excelHelper.ts
 │   ├── testdata/
@@ -117,9 +146,13 @@ sallamat-official/
 │       ├── sample.png
 │       ├── sample.mp4
 │       └── sample.pdf
+├── reports/                        # تقارير المشروع
+│   ├── report.html                 # التقرير (HTML) – مصدر الـ PDF
+│   └── Sallamat-Automation-Report.pdf
 ├── playwright.config.ts            # إعدادات Playwright
 ├── tsconfig.json                   # إعدادات TypeScript
 ├── package.json                    # المكتبات والأوامر (scripts)
+├── RUN_COMMANDS.md                 # أوامر التشغيل بالتفصيل
 └── README.md
 ```
 
@@ -188,6 +221,15 @@ sallamat-official/
 | `createTemplate.video.spec.ts` | فيديو | `assets/sample.mp4` |
 | `createTemplate.file.spec.ts` | ملف | `assets/sample.pdf` |
 
+#### `specs/templates/manage/` – إدارة القوالب (معاينة / تعديل / حذف)
+
+كل تيست بيشتغل على **قالب نصي جديد** بيعمله الـ fixture (`templatesList.fixture.ts`) باسم فريد، فمش بيلمس أي قالب حقيقي. ولو القالب لسه موجود بعد التيست بيتحذف أوتوماتيك.
+
+| الملف | بيعمل إيه |
+|---|---|
+| `01-preview-edit.spec.ts` | **معاينة:** المعاينة بتعرض اسم القالب ومحتواه وبتتقفل. **تعديل:** فتح التعديل ← الحقول بتظهر بالداتا القديمة ← تعديل الهيدر والبودي والفوتر ← إرسال للمراجعة ← الـ request (PUT/PATCH/POST) يرجع أقل من 400 ← المحتوى الجديد يظهر في المعاينة |
+| `02-delete.spec.ts` | **إلغاء** في نافذة الحذف يسيب القالب موجود، و**حذف** (السلة الحمرا) يشيل القالب من القائمة |
+
 #### `specs/ads/` – صندوق الإعلان
 
 | الملف | بيعمل إيه |
@@ -221,6 +263,40 @@ sallamat-official/
 | `06-sorting.spec.ts` | الترتيب الزمني (الأحدث للأقدم والعكس) بـ `updated_at` |
 | `07-combined.spec.ts` | فلاتر مجمّعة (بحث + نوع + نوع عميل) واسترجاعها من الـ URL بعد reload |
 
+#### `specs/whatsapp-widget/` – واتساب ودجت
+
+كل كيس في فايل لوحده. التستات اللي بتحفظ بتتأكد من 3 حاجات:
+1. `POST /api/whatsapp-widget` رجع نجاح + رسالة **"تم حفظ إعدادات ودجت واتساب بنجاح"**.
+2. بعد الريفريش ➜ `GET /api/whatsapp-widget` بيرجّع القيم الجديدة (يعني اتحفظت فعلًا مش بس ظاهرة).
+3. الفورم بعد الريفريش فيه القيم الجديدة.
+
+> ⚠️ الفايلات اللي بتحفظ بتغيّر إعدادات الأكونت الحقيقية، فبتقرا القيم الأصلية في `beforeEach` وبترجّعها في `afterEach` **حتى لو التيست فشل**. شغّلهم واحد واحد أو بـ `--workers=1`.
+
+| الملف | بيعمل إيه | بيحفظ؟ |
+|---|---|---|
+| `01-update-content.spec.ts` | تعديل العنوان الرئيسي + رسالة الترحيب + الرسالة الافتراضية ➜ حفظ ➜ التأكد إنها اتحفظت | ✅ وبيرجّع |
+| `02-main-title-validation.spec.ts` | عنوان أقل من 5 حروف ➜ "العنوان الرئيسي لا يمكن أن يقل عن 5 أحرف" ومفيش request بيتبعت | ❌ |
+| `03-phone-validation.spec.ts` | رقم الواتساب فاضي ➜ خطأ على الحقل ومفيش request بيتبعت | ❌ |
+| `04-appearance.spec.ts` | موقع الأيقونة (عكس الحالي) + الحجم + الإزاحة من الأسفل + لون الشريط العلوي | ✅ وبيرجّع |
+| `05-interaction.spec.ts` | عند التمرير (عكس الحالي) + عند الخمول ON + عدد الثواني | ✅ وبيرجّع |
+| `06-deactivate.spec.ts` | إيقاف الودجت ➜ `is_active = false` | ✅ وبيرجّع |
+| `07-live-preview.spec.ts` | المعاينة اللي على الشمال بتعرض النصوص وإنت بتكتب، ومن غير حفظ مفيش حاجة بتتغير | ❌ |
+| `08-logo-upload.spec.ts` | حذف الشعار (X) ➜ رفع `assets/sample.png` ➜ المعاينة بتتغير ➜ حفظ ➜ `icon_logo` جديد. في الآخر بينزّل نسخة من الشعار الأصلي ويرفعها تاني (نفس الصورة بس بـ URL جديد على السيرفر) | ✅ وبيرجّع |
+
+#### `specs/settings/change-password/` – تغيير كلمة السر
+
+الإعدادات ← زرار **تغيير كلمة السر** ← بوب أب فيه: كلمة المرور الحالية، الجديدة، التأكيد ← **تأكيد** (`POST /api/auth/merchant/change-password`).
+
+| الملف | بيعمل إيه |
+|---|---|
+| `01-change-password.spec.ts` | 3 خطوات مطبوعة في التيرمنال: **1)** تغيير الباسوورد (الحالي من `testdata.json` ➜ باسوورد مؤقت) **2)** الموقع بيقفل الـ session بعد التغيير ➜ لوجين بالباسوورد الجديد (الـ 401 المتوقعة هنا مش بتتطبع) **3)** رجوع الباسوورد القديم. لو الرجوع فشل، الباسوورد المؤقت بيتطبع في رسالة الخطأ |
+| `02-empty-fields.spec.ts` | تأكيد والحقول فاضية ➜ "هذا الحقل مطلوب" (الموقع بيعرضها على أول حقل بس) |
+| `03-mismatch-confirmation.spec.ts` | التأكيد مش مطابق للجديدة ➜ خطأ على حقل التأكيد والبوب أب يفضل مفتوح |
+| `04-wrong-current-password.spec.ts` | باسوورد حالي غلط ➜ 422 "كلمة المرور القديمة غير صحيحة." |
+| `05-cancel.spec.ts` | إلغاء ➜ البوب أب يتقفل من غير تغيير |
+
+> ⚠️ `01` بيغيّر باسوورد الأكونت المشترك لثواني – لو تستات تانية عملت لوجين في نفس اللحظة هتفشل. شغّله لوحده أو بـ `--workers=1`.
+
 ---
 
 ### `tests/pages/` – الـ Page Objects
@@ -234,7 +310,7 @@ sallamat-official/
 
 | الملف | الصفحة | أهم الدوال |
 |---|---|---|
-| `BasePage.ts` | **الأساس** – كل الصفحات بتورث منه | `enableApiLogging()`: بيطبع كل API call في التيرمنال (Payload / Preview / Response) مرة واحدة |
+| `BasePage.ts` | **الأساس** – كل الصفحات بتورث منه | `enableApiLogging()`: بيطبع كل API call في التيرمنال (Payload / Preview / Response) مرة واحدة. `muteApiLogging()` / `unmuteApiLogging()`: بيوقف الطباعة مؤقتًا لخطوات مش جزء من الأكشن (زي الـ 401 المتوقعة بعد تغيير الباسوورد) |
 | `LoginPage.ts` | صفحة تسجيل الدخول | `goto()`, `login(email, password)`, `expectLoggedIn()`, `expectStillOnLogin()` |
 | `ManualCampaignPage.ts` | إنشاء حملة يدوية | `openManualCampaigns()`, `fillCampaignName()`, `selectAudience()`, `selectTemplate()`, `clickCreateCampaign()` |
 | `CampaignsListPage.ts` | **الأساس المشترك** لقوائم الحملات (اليدوية والتلقائية) – كل الكود بتاع البحث والفلاتر والجدول هنا، والصفحتين اللي تحت بيورثوا منه | `open()`, `search()`, `selectFilter(label, option)`, `getFilterOptions()`, `selectDateRange(from, to)`, `getColumnValues()`, `getNames()`, `expectAllRows()`, `printTable()` + `campaignsFrom(res)` بيقرا الحملات من الـ Response |
@@ -242,8 +318,13 @@ sallamat-official/
 | `AutoCampaignsListPage.ts` | قائمة الحملات التلقائية | بيحدد الرابط والـ API ومربع البحث + `AUTO_COLUMN` (أرقام الأعمدة)، `AUTO_STATUS` (الحالة ← قيمة الـ API ونص الزرار)، `AUTO_EVENTS`، `AUTO_TEMPLATE_STATUSES` |
 | `AutoCampaignPage.ts` | إنشاء حملة تلقائية | `createAutoCampaign()`, `selectTemplate()` (بيعلّم على الشيك بوكس), `activateCampaign()` |
 | `TemplatePage.ts` | إنشاء قالب | `createTemplate({ type, filePath, ... })`, `selectAttachmentType()`, `submitTemplate()` |
+| `TemplatesListPage.ts` | قائمة القوالب (إدارة) | `openFromSidebar()`, `search()`, `findTemplate()`, `openPreview()`, `closePreview()`, `openEdit()`, `editFields()`, `submitForReview()`, `clickDelete()`, `deleteTemplate()` |
 | `AdPage.ts` | صندوق الإعلان | `createAd(imagePath)`, `uploadImage()`, `clickNextStep()`, `launchAd()` |
-| `CustomersPage.ts` | العملاء | `openCustomers()`, `clickManualUpload()`, `downloadTemplate()`, `uploadFile()`, `confirm()` |
+| `AdsListPage.ts` | قائمة الإعلانات | `openFromSidebar()`, `selectTab()` (الكل / مفعّلة / غير مفعّلة), `search()`, `clearSearch()`, `getCards()`, `getCardsCount()`, `printCards()` |
+| `CustomersPage.ts` | العملاء (رفع الإكسل) | `openCustomers()`, `clickManualUpload()`, `downloadTemplate()`, `uploadFile()`, `confirm()` |
+| `CustomersListPage.ts` | قائمة العملاء (بحث وفلاتر) | `open()`, `search()`, `clearSearch()`, `selectFilter()`, `getFilterOptions()`, `selectCampaigns()`, `selectDateRange()`, `getColumnValues()`, `getRowsCount()`, `printTable()` |
+| `WhatsAppWidgetPage.ts` | واتساب ودجت | `goto()`, `readForm()` (كل القيم الحالية), `fillForm({...})`, `setSwitch()`, `setPosition()`, `uploadLogo()`, `downloadLogo()`, `save()`, `saveAndExpectSuccess()`, `reloadAndGetSaved()` (القيم المحفوظة من الـ API), `restore(original)`, `expectFieldError()` |
+| `SettingsPage.ts` | الإعدادات – تغيير كلمة السر | `goto()`, `openChangePasswordDialog()`, `fillChangePasswordForm()`, `changePassword(old, new)` (بيرجّع الـ Response), `clickCancel()`, `expectDialogClosed()`, `expectFieldInvalid()` |
 
 ---
 
@@ -254,6 +335,9 @@ sallamat-official/
 | الملف | بيعمل إيه |
 |---|---|
 | `campaignsList.fixture.ts` | بيستخدمه ملفات `manual-filters/` و`auto-filters/`. **بيعمل login مرة واحدة بس لكل worker** ويحفظ الـ session (`storageState`) ويعيد استخدامها في كل التستات – لأن الموقع بيرفض logins كتير ورا بعض. بعدين بيفعّل طباعة الـ APIs ويفتح الصفحة من غير فلاتر، ويدّي التيست الصفحة جاهزة: `manualList` (الحملات اليدوية) أو `autoList` (الحملات التلقائية). بعد التيست بيعمل `page.pause()` (إلا لو `CI` أو `NO_PAUSE=1`) |
+| `adsList.fixture.ts` | بيستخدمه `ads/filters/`. نفس الـ session المشتركة ← يفتح صفحة داخلية ← يضغط تاب "صندوق الإعلان" في السيدبار ← يطبع APIs الإعلانات. بيدّي التيست `adsList` |
+| `customersList.fixture.ts` | بيستخدمه `customers/filters/`. نفس الـ session ← يفتح صفحة العملاء من غير فلاتر ← يطبع `GET /api/customers` لنتيجة الأكشن بس (مش تحميل الصفحة). بيدّي التيست `customersList` |
+| `templatesList.fixture.ts` | بيستخدمه `templates/manage/`. نفس الـ session ← يعمل قالب نصي جديد (`template`) ← يفتح صفحة القوالب (`templatesList`). بعد التيست بيحذف القالب لو لسه موجود |
 
 الاستخدام في التيست:
 ```ts
@@ -274,8 +358,9 @@ test('auto', async ({ autoList }) => {
 
 | الملف | بيعمل إيه |
 |---|---|
-| `apiLogFormat.ts` | **الفورمات الموحّد** لطباعة أي API call في التيرمنال: **Payload** (الـ query params أو الـ body) – **Preview** (ملخص: المفاتيح وعدد العناصر) – **Response** (الـ JSON، بيتقص بعد 1200 حرف). بيمنع التكرار (نفس الـ call في 5 ثواني بيتطبع مرة)، وبيخفي الباسوورد والتوكن |
+| `apiLogFormat.ts` | **الفورمات الموحّد** لطباعة أي API call في التيرمنال: **Payload** (الـ query params أو الـ body) – **Preview** (ملخص: المفاتيح وعدد العناصر) – **Response** (الـ JSON، بيتقص بعد 1200 حرف). بيمنع التكرار (نفس الـ call في 5 ثواني بيتطبع مرة)، وبيخفي الباسوورد والتوكن (أي حقل اسمه فيه `password` – زي `old_password` و`password_confirmation` – بيتخفي) |
 | `apiLogger.ts` | `sendAndLog()` لتستات الـ API: بيبعت الـ request، يقيس الوقت، يطبع النتيجة بنفس الفورمات + سطر ✅ SUCCESS / ❌ FAILED، ويضيفها للريبورت |
+| `arabicTerminal.ts` | بيصلّح العربي في التيرمنال (VS Code / Windows): بيوصّل الحروف ويكتب من اليمين للشمال. بيتفعّل من `playwright.config.ts` على التيرمنال بس (الريبورت بيفضل عربي عادي). `ARABIC_RAW=1` يطفيه، `ARABIC_SHAPING=1` يشغّله حتى لو الـ output رايح لملف |
 | `authResult.ts` | `interpretAuth()`: بيفهم رد الـ login (next-auth بيرجّع 200 حتى لو فشل، فبيقرا الـ `error` من الـ URL ويحوّله لـ 401/403/...) |
 | `excelHelper.ts` | `generateCustomers()`: بيولّد عملاء بأسماء وإيميلات وأرقام موبايل سعودية صحيحة (50/53/54/55/56/58/59). `fillCustomersTemplate()`: بيفتح ملف الإكسل اللي اتنزل، يقرا أسماء الأعمدة، ويملاها حسب اسم كل عمود (عربي أو إنجليزي). لو فيه عمود منفصل لكود الدولة بيكتب `966` فيه والرقم من غير الكود |
 
@@ -297,7 +382,7 @@ test('auto', async ({ autoList }) => {
 | الملف | مستخدم في |
 |---|---|
 | `ad-image.png` | صورة الإعلان (800×600 – المقاس الموصى بيه في الموقع) |
-| `sample.png` | قالب بصورة |
+| `sample.png` | قالب بصورة + شعار واتساب ودجت |
 | `sample.mp4` | قالب بفيديو |
 | `sample.pdf` | قالب بملف |
 
@@ -307,7 +392,13 @@ test('auto', async ({ autoList }) => {
 
 | الملف | بيعمل إيه |
 |---|---|
-| `playwright.yml` | مع كل push أو pull request على `main`: بيسطّب المكتبات والبراوزرات، يشغّل كل التستات، ويرفع الريبورت كـ artifact لمدة 30 يوم. على الـ CI البراوزر بيشتغل headless |
+| `playwright.yml` | **تشغيل يدوي بس** (`workflow_dispatch`) – مش بيشتغل مع كل push. الخطوات: يتأكد إن الـ secrets موجودة ← يسطّب المكتبات والبراوزرات ← يعمل `testdata.json` من الـ secrets ← يشغّل التستات ← يرفع الريبورت كـ artifact لمدة 30 يوم. على الـ CI البراوزر headless والتيست الفاشل بيتعاد مرتين (`retries: 2`) |
+
+**إزاي تشغّله:** GitHub ← **Actions** ← **Playwright Tests** ← **Run workflow**. فيه خانة اختيارية `tests` تحط فيها مسار معين (مثلًا `tests/specs/customers`)، ولو سبتها فاضية بيشغّل كل التستات.
+
+**الـ Secrets المطلوبة** (Settings ← Secrets and variables ← Actions ← Repository secrets):
+`TEST_VALID_EMAIL` – `TEST_VALID_PASSWORD` – `TEST_INVALID_EMAIL` – `TEST_INVALID_PASSWORD`.
+لو أي واحد ناقص أو فاضي، الرن بيقف من أول خطوة (**Check test secrets**) برسالة واضحة باسم الـ secret الناقص، بدل ما التستات تقع بـ 401 مش مفهوم.
 
 ---
 
@@ -334,6 +425,11 @@ npm ci
 npx playwright install
 ```
 
+بعدين اعمل ملف بيانات الدخول (مش موجود في git) واكتب فيه الإيميل والباسوورد بتوعك:
+```powershell
+Copy-Item tests/testdata/testdata.example.json tests/testdata/testdata.json
+```
+
 ## تشغيل التستات
 
 | الأمر | بيشغّل إيه |
@@ -352,6 +448,8 @@ npx playwright install
 | `npm run test:ads:filters` | فلاتر الإعلانات بس |
 | `npm run test:customers` | العملاء (رفع بالإكسل + فلاتر) |
 | `npm run test:customers:filters` | فلاتر العملاء بس |
+| `npm run test:widget` | واتساب ودجت (الـ 8 فايلات ورا بعض) |
+| `npm run test:settings` | تغيير كلمة السر (الـ 5 فايلات ورا بعض) |
 | `npm run test:api` | تستات الـ API بس |
 | `npm run test:debug` | تشغيل مع الـ Inspector خطوة بخطوة |
 | `npm run report` | فتح آخر ريبورت |
@@ -375,6 +473,7 @@ npx playwright test -g "status = مكتملة"
 | `$env:NO_PAUSE="1"` | البراوزر ما يستناش Resume في آخر تستات الفلاتر |
 | `$env:API_LOG_BODY="5000"` | يطبع Response أطول في التيرمنال |
 | `$env:SHOW_SECRETS="1"` | يعرض الباسوورد والتوكن في اللوج بدل `********` |
+| `$env:ARABIC_RAW="1"` | يطفي تصليح العربي في التيرمنال (لو التيرمنال بيدعم العربي أصلًا) |
 
 مثال:
 ```powershell
@@ -421,9 +520,19 @@ $env:HEADLESS="1"; $env:NO_PAUSE="1"; npm run test:filters
        }
    }
    ```
-2. **اعمل ملف التيست** في الفولدر المناسب جوه `tests/specs/<feature>/` باسم `something.spec.ts`.
+2. **اعمل ملف التيست** في الفولدر المناسب جوه `tests/specs/<feature>/` – **كل كيس في فايل لوحده** ومترقّم (`01-....spec.ts`, `02-....spec.ts`).
 3. في `beforeEach`: اعمل login من `LoginPage` وفعّل `enableApiLogging()`.
+   لو التيست بيغيّر داتا حقيقية في الأكونت (باسوورد، إعدادات): اقرا القيم الأصلية في `beforeEach` ورجّعها في `afterEach`.
 4. **الملفات اللي بتترفع** حطها في `tests/assets/`، و**البيانات الثابتة** في `tests/testdata/`.
 5. شغّل `npm run typecheck` وبعدين التيست.
+
+## التقارير (`reports/`)
+
+| الملف | فيه إيه |
+|---|---|
+| `report.html` | تقرير الأتمتة (عربي، مقاس A4): ملخص تنفيذي، اللي اتعمل في كل وحدة وعدد التستات (88 تيست في 49 ملف)، بنية الإطار، تقييم أداة **e2e** كإضافة محتملة (مقارنة مع Playwright، الفوايد، المخاطر)، والتوصية بتجربة محدودة (PoC) |
+| `Sallamat-Automation-Report.pdf` | نفس التقرير كـ PDF جاهز للإرسال |
+
+لو عدّلت التقرير: عدّل `report.html` وافتحه في البراوزر ← Print ← Save as PDF عشان تطلّع الـ PDF من جديد.
 
 </div>

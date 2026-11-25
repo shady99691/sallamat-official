@@ -34,7 +34,7 @@ npx playwright test tests/specs/auth/login.api.spec.ts
 npx playwright test tests/specs/campaigns
 
 # إنشاء حملة يدوية
-npx playwright test tests/specs/campaigns/manual-filters/05-group.spec.ts
+npx playwright test tests/specs/campaigns/manualCampaign.spec.ts
 
 # إنشاء حملة تلقائية
 npx playwright test tests/specs/campaigns/autoCampaign.spec.ts
@@ -197,6 +197,67 @@ npx playwright test tests/specs/customers/filters/07-combined.spec.ts
 
 ---
 
+## 💬 WhatsApp Widget (واتساب ودجت)
+
+```bash
+# الفولدر كله – الفايلات ورا بعض (--workers=1) عشان ما يبوّظوش بعض
+npx playwright test tests/specs/whatsapp-widget --workers=1
+
+# تعديل محتوى الرسائل (العنوان + الترحيب + الافتراضية) ➜ حفظ ➜ يرجّع القديم
+npx playwright test tests/specs/whatsapp-widget/01-update-content.spec.ts
+
+# العنوان الرئيسي أقل من 5 حروف ➜ خطأ
+npx playwright test tests/specs/whatsapp-widget/02-main-title-validation.spec.ts
+
+# رقم الواتساب فاضي ➜ خطأ
+npx playwright test tests/specs/whatsapp-widget/03-phone-validation.spec.ts
+
+# تخصيص المظهر (موقع + حجم + إزاحة + لون) ➜ حفظ ➜ يرجّع القديم
+npx playwright test tests/specs/whatsapp-widget/04-appearance.spec.ts
+
+# التفاعل (عند التمرير + عند الخمول + عدد الثواني) ➜ حفظ ➜ يرجّع القديم
+npx playwright test tests/specs/whatsapp-widget/05-interaction.spec.ts
+
+# إيقاف الودجت ➜ حفظ ➜ يرجّع القديم
+npx playwright test tests/specs/whatsapp-widget/06-deactivate.spec.ts
+
+# المعاينة بتتحدث لايف وإنت بتكتب (من غير حفظ)
+npx playwright test tests/specs/whatsapp-widget/07-live-preview.spec.ts
+
+# رفع صورة شعار الأيقونة ➜ حفظ ➜ يرفع الشعار الأصلي تاني
+npx playwright test tests/specs/whatsapp-widget/08-logo-upload.spec.ts
+```
+
+> ⚠️ شغّل كل فايل لوحده. `01` و`04` و`05` و`06` و`08` بيغيّروا إعدادات الودجت فعلًا، وبيرجّعوها للقيم الأصلية في آخر التيست حتى لو التيست فشل.
+
+---
+
+## ⚙️ Settings (الإعدادات)
+
+```bash
+# الفولدر كله – الفايلات ورا بعض (--workers=1) عشان ما يبوّظوش بعض
+npx playwright test tests/specs/settings --workers=1
+
+# تغيير كلمة السر – تغيير ناجح (الحالي ➜ جديد ➜ يرجع للحالي)
+npx playwright test tests/specs/settings/change-password/01-change-password.spec.ts
+
+# الحقول فاضية ➜ "هذا الحقل مطلوب"
+npx playwright test tests/specs/settings/change-password/02-empty-fields.spec.ts
+
+# التأكيد مش مطابق للجديدة
+npx playwright test tests/specs/settings/change-password/03-mismatch-confirmation.spec.ts
+
+# الباسوورد الحالي غلط ➜ 422
+npx playwright test tests/specs/settings/change-password/04-wrong-current-password.spec.ts
+
+# إلغاء
+npx playwright test tests/specs/settings/change-password/05-cancel.spec.ts
+```
+
+> ⚠️ شغّل كل فايل لوحده. `01` بيغيّر باسوورد الأكونت فعلًا وبعدين يرجّعه للقديم. لو اتشغّل مع الفايلات التانية في نفس الوقت، اللوجين بتاعها هيفشل. لو الرجوع فشل، الباسوورد المؤقت بيتطبع في رسالة الخطأ.
+
+---
+
 ## ⚙️ إضافات تحطها في آخر أي أمر
 
 | الإضافة | بتعمل إيه |
@@ -246,6 +307,39 @@ $env:ARABIC_RAW="1"; npx playwright test tests/specs/customers/uploadCustomers.s
   - أي request فشل (4xx / 5xx)
 - **تستات الفلاتر**: بيتطبع كل request بنتايجه (عشان تشوف الفلتر رجّع إيه)
 - عايز كل الـ APIs في تيست أكشن؟ غيّر `enableApiLogging()` لـ `enableApiLogging({ newOnly: false })`
+
+---
+
+## ☁️ تشغيل على GitHub Actions (CI/CD)
+
+الـ workflow يدوي بس. من GitHub: **Actions ← Playwright Tests ← Run workflow**، وفي خانة المسار اكتب المسار من الأوامر اللي فوق (من غير `npx playwright test`). سيبها فاضية لتشغيل الكل.
+
+| عايز تشغّل | اكتب في الخانة |
+|---|---|
+| الكل | *(فاضي)* |
+| Auth | `tests/specs/auth` |
+| Login UI | `tests/specs/auth/login.spec.ts` |
+| Login API | `tests/specs/auth/login.api.spec.ts` |
+| الحملات كلها | `tests/specs/campaigns` |
+| حملة يدوية | `tests/specs/campaigns/manualCampaign.spec.ts` |
+| حملة تلقائية | `tests/specs/campaigns/autoCampaign.spec.ts` |
+| فلاتر الحملات اليدوية | `tests/specs/campaigns/manual-filters` |
+| فلاتر الحملات التلقائية | `tests/specs/campaigns/auto-filters` |
+| القوالب كلها | `tests/specs/templates` |
+| إدارة القوالب | `tests/specs/templates/manage` |
+| الإعلانات | `tests/specs/ads` |
+| فلاتر الإعلانات | `tests/specs/ads/filters` |
+| العملاء | `tests/specs/customers` |
+| فلاتر العملاء | `tests/specs/customers/filters` |
+| واتساب ودجت (كله) | `tests/specs/whatsapp-widget` |
+| واتساب ودجت (تعديل المحتوى) | `tests/specs/whatsapp-widget/01-update-content.spec.ts` |
+| الإعدادات (تغيير كلمة السر كله) | `tests/specs/settings` |
+| تغيير كلمة السر (ناجح) | `tests/specs/settings/change-password/01-change-password.spec.ts` |
+| ملف معين | `tests/specs/customers/filters/04-campaign.spec.ts` |
+
+> على الـ CI الفايلات بتشتغل ورا بعض أصلًا (`workers: 1`)، فواتساب ودجت والإعدادات آمنين هناك.
+> ممكن تكتب أكتر من مسار بمسافة بينهم، مثال: `tests/specs/ads tests/specs/customers`
+> التقرير بيتحمّل من آخر الرن في Artifacts باسم `playwright-report`.
 
 ---
 

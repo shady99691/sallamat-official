@@ -6,6 +6,9 @@ import { NewItemsTracker, printApiCall } from '../utils/apiLogFormat';
 // الصفحات اللي اللوجينج اتفعّل عليها بالفعل (عشان ما يتسجلش مرتين على نفس الصفحة)
 const pagesWithLogging = new WeakSet<Page>();
 
+// الصفحات اللي طباعة الـ APIs فيها متوقفة مؤقتًا (muteApiLogging)
+const mutedPages = new WeakSet<Page>();
+
 // الصفحات اللي اتسجل عليها handler البوب أب (عشان ما يتسجلش مرتين)
 const pagesWithPopupHandler = new WeakSet<Page>();
 
@@ -77,7 +80,8 @@ export abstract class BasePage {
         const { urlFilter, newOnly = true, fullResponse = newOnly } = options;
         const tracker = newOnly ? new NewItemsTracker() : undefined;
         const isApiRequest = (type: string, url: string) => ['xhr', 'fetch'].includes(type) && !url.includes('_rsc=');
-        const isAuth = (url: string) => /\/api\/auth\//.test(url);
+        // طلبات اللوجين بتاعة NextAuth بس – مش /api/auth/merchant/... (زي change-password)
+        const isAuth = (url: string) => /\/api\/auth\/(callback|session|csrf|providers|signin|signout|_log|error)\b/.test(url);
         const isWrite = (method: string) => !['GET', 'HEAD', 'OPTIONS'].includes(method);
 
         // وقت الأكشن بيتسجل لحظة ما الـ request يتبعت (قبل أي list تتحمل بعده)
@@ -91,6 +95,7 @@ export abstract class BasePage {
 
         this.page.on('response', async (response) => {
             try {
+                if (mutedPages.has(this.page)) return;   // اللوجينج متوقف مؤقتًا (muteApiLogging)
                 const request = response.request();
                 const url = request.url();
 
@@ -152,6 +157,19 @@ export abstract class BasePage {
                 // لو الصفحة اتقفلت أثناء القراءة نتجاهل الخطأ
             }
         });
+    }
+
+    /**
+     * إيقاف طباعة الـ APIs مؤقتًا – لخطوات مش جزء من الأكشن نفسه
+     * (مثلًا بعد تغيير الباسوورد الـ session بتتقفل وكل requests الصفحة بترجع 401 متوقع)
+     */
+    muteApiLogging() {
+        mutedPages.add(this.page);
+    }
+
+    /** رجوع طباعة الـ APIs بعد muteApiLogging */
+    unmuteApiLogging() {
+        mutedPages.delete(this.page);
     }
 
     /** الـ Page Objects بتنادي دي بعد ما ترفع ملف، عشان يظهر في الـ Payload بتاع الـ upload */
