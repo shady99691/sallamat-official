@@ -23,6 +23,8 @@ const COLOR = {
 };
 
 const SENSITIVE_KEYS = ['password', 'csrftoken', 'token', 'access_token', 'refresh_token', 'authorization'];
+// أي key فيه "password" (old_password / password_confirmation ...) بيتخفي برضه
+const isSensitive = (key: string) => SENSITIVE_KEYS.includes(key.toLowerCase()) || /password/i.test(key);
 const SHOW_SECRETS = process.env.SHOW_SECRETS === '1';
 const MAX_RESPONSE = Number(process.env.API_LOG_BODY) || 1200;
 const DEDUPE_WINDOW_MS = 5000;
@@ -34,7 +36,7 @@ export function maskSecrets(value: unknown): unknown {
     if (Array.isArray(value)) return value.map(maskSecrets);
     return Object.fromEntries(
         Object.entries(value as Record<string, unknown>).map(([k, v]) =>
-            SENSITIVE_KEYS.includes(k.toLowerCase()) ? [k, '********'] : [k, maskSecrets(v)],
+            isSensitive(k) ? [k, '********'] : [k, maskSecrets(v)],
         ),
     );
 }
@@ -83,7 +85,7 @@ export function buildPayload(url: string, body?: string | null, contentType = ''
         } else if (contentType.includes('application/x-www-form-urlencoded')) {
             // زي فورم اللوجين: email=...&password=... ➜ سطر لكل حقل والباسوورد متخفي
             new URLSearchParams(body).forEach((v, k) => {
-                const hidden = !SHOW_SECRETS && SENSITIVE_KEYS.includes(k.toLowerCase());
+                const hidden = !SHOW_SECRETS && isSensitive(k);
                 lines.push(`${k}: ${hidden ? '********' : v}`);
             });
         } else {
@@ -116,7 +118,7 @@ function describeMultipart(raw: string): string[] {
             lines.push(`${name}: 📎 ${Buffer.from(filename, 'latin1').toString('utf8')} (${type}, ${kb} KB)`);
         } else {
             const value = Buffer.from(content, 'latin1').toString('utf8');
-            const hidden = !SHOW_SECRETS && SENSITIVE_KEYS.includes(name.toLowerCase());
+            const hidden = !SHOW_SECRETS && isSensitive(name);
             lines.push(`${name}: ${hidden ? '********' : value.slice(0, 200)}`);
         }
     }

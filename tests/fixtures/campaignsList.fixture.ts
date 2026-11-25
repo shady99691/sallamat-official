@@ -25,7 +25,7 @@ type Fixtures = {
 };
 
 async function openList<T extends CampaignsListPage>(listPage: T, use: (p: T) => Promise<void>) {
-    base.setTimeout(0);
+    base.setTimeout(process.env.CI ? 180_000 : 0);
     await listPage.open();
     // اللوجينج بيبدأ بعد فتح الصفحة: قائمة تحميل الصفحة (من غير فلاتر) مش بتتطبع،
     // بيتطبع بس نتيجة الأكشن بتاع التيست (فلتر / بحث / ترتيب) ➜ الداتا تظهر مرة واحدة

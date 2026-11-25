@@ -17,8 +17,8 @@ test.describe('Customers – Manual Excel Upload', () => {
     let customersPage: CustomersPage;
 
     test.beforeEach(async ({ page }) => {
-        // بدون timeout عشان البراوزر يفضل مفتوح بعد الرن
-        test.setTimeout(0);
+        // بدون timeout على الجهاز عشان البراوزر يفضل مفتوح بعد الرن – في الـ CI: 3 دقايق
+        test.setTimeout(process.env.CI ? 180_000 : 0);
 
         loginPage = new LoginPage(page);
         customersPage = new CustomersPage(page);
@@ -34,7 +34,7 @@ test.describe('Customers – Manual Excel Upload', () => {
 
     // البراوزر يفضل مفتوح بعد الرن (نجح أو فشل) لحد ما تضغط Resume في الـ Inspector
     test.afterEach(async ({ page }) => {
-        await page.pause();
+        if (!process.env.CI && process.env.NO_PAUSE !== '1') await page.pause();
     });
 
     test('Upload customers Excel file successfully', async ({}, testInfo) => {

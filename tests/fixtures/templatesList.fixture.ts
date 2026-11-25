@@ -36,13 +36,13 @@ async function createTextTemplate(page: Page) {
 export const test = base.extend<Fixtures>({
 
     template: async ({ page }, use, testInfo) => {
-        testInfo.setTimeout(0);
+        testInfo.setTimeout(process.env.CI ? 180_000 : 0);
         const created = await createTextTemplate(page);
         await use(created);
     },
 
     templatesList: async ({ page, template }, use, testInfo) => {
-        testInfo.setTimeout(0);
+        testInfo.setTimeout(process.env.CI ? 180_000 : 0);
         const list = new TemplatesListPage(page);
         await list.openFromSidebar();
         list.enableApiLogging({ urlFilter: /template/i });

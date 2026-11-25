@@ -17,7 +17,7 @@ export const test = base.extend<{ adsList: AdsListPage }>({
 
     adsList: async ({ page }, use, testInfo) => {
         // فتح الصفحة بياخد أكتر من الـ 30 ثانية الافتراضية ➜ من غير timeout
-        testInfo.setTimeout(0);
+        testInfo.setTimeout(process.env.CI ? 180_000 : 0);
 
         // 1) صفحة داخلية (اليوزر داخل بالفعل من الـ storageState)
         await page.goto(CustomersListPage.URL, { waitUntil: 'domcontentloaded' });
